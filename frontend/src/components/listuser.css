@@ -1,0 +1,10 @@
+.listuser{
+    display: inline;
+  top: 192px; 
+  left: 100px; 
+  font-family: Epilogue; /* Heading */
+  font-size: 24px; 
+  line-height: 84px; 
+  font-weight: 700; 
+  color: #171A1FFF;
+}
