@@ -5,3 +5,5 @@ Flask-CORS==3.1.2
 pymongo==4.6.0
 gridfs==2020.10.1
 bson==0.5.10
+PyPDF2==1.28.0
+python-docx==0.8.11
