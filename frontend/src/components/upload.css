@@ -1,0 +1,195 @@
+.heading{
+    position: absolute; 
+    top: 120px; 
+    left: 645px; 
+    font-family: Epilogue; 
+    font-size: 40px; 
+    line-height: 56px; 
+    font-weight: 700; 
+    color: #171A1FFF; 
+}
+.text{
+    position: absolute; 
+  top: 180px; 
+  left: 630px; 
+  font-family: Inter; 
+  font-size: 14px; 
+  line-height: 22px; 
+  font-weight: 400; 
+  color: #565E6CFF;
+}
+.container{
+    position: absolute; 
+    top: 230px; 
+    left: 400px; 
+    width: 640px; 
+    height: 312px; 
+    background: #EBFDFF80; 
+    border-radius: 8px;
+    border-width: 1px; 
+    border-color: #00BDD6FF; 
+    border-style: dashed; 
+}
+.icons{
+    position: absolute; 
+  top: 125px; 
+  left: 269px; 
+  width: 80px; 
+  height: 80px;  
+  color: #00BDD6FF;
+  font-size: 50px;
+}
+.button {
+    position: absolute; 
+    top: 126px; 
+    left: 256px; 
+    height: 36px; 
+    width: 20px;
+    padding: 0 12px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-family: Inter; 
+    font-size: 14px; 
+    line-height: 22px; 
+    font-weight: 400; 
+    color: #FFFFFFFF; 
+    background: #00BDD6FF;
+    opacity: 1; 
+    border: none; 
+    border-radius: 4px;
+  }
+  
+  .button:hover {
+    color: #FFFFFFFF; 
+    background: #00A9C0FF;
+  }
+  .button:hover:active {
+    color: #FFFFFFFF; 
+    background: #0095A9FF;
+  }
+  .button:disabled {
+    opacity: 0.4; 
+  }
+  /* Textbox 1 */
+.textbox {
+    position: absolute; 
+    top: 113px; 
+    left:23px; 
+    opacity: 1; 
+  }
+  .textbox input {
+    width: 516px;
+    height: 44px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-family: Inter;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 28px;
+    background: #FFFFFFFF; /* white */
+    border-radius: 26px;
+    border-width: 1px;
+    border-color: #9095A0FF; /* neutral-500 */
+    outline: none;
+  }
+  .textbox input:hover {
+    color: #171A1FFF; /* neutral-900 */
+    background: #FFFFFFFF; /* white */
+    border-color: #A7ADB7FF; /* neutral-450 */
+  }
+  .textbox input:focused {
+    color: #171A1FFF; /* neutral-900 */
+    background: #FFFFFFFF; /* white */
+    border-color: #9095A0FF; /* neutral-500 */
+  }
+  .textbox input:disabled {
+    color: #171A1FFF; /* neutral-900 */
+    background: #FFFFFFFF; /* white */
+    border-color: #BCC1CAFF; /* neutral-400 */
+  }
+  .textbox :disabled + .icon, .textbox :disabled + .icon + .icon {
+    fill: #171A1FFF; /* neutral-900 */
+  }
+  /* Button 2 */
+.upload-btn {
+    position: absolute; 
+    top: 370px; 
+    left: 253px; 
+    width: 112px; 
+    height: 36px; 
+    padding: 0 12px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-family: Inter; 
+    font-size: 14px; 
+    line-height: 22px; 
+    font-weight: 400; 
+    color: #FFFFFFFF; /* white */
+    background: #00BDD6FF; /* primary-500 */
+    opacity: 1; 
+    border: none; 
+    border-radius: 4px; /* border-m */
+  }
+  /* Hover */
+  .upload-btn:hover {
+    color: #FFFFFFFF; /* white */
+    background: #00A9C0FF; /* primary-550 */
+  }
+  /* Pressed */
+  .upload-btn:hover:active {
+    color: #FFFFFFFF; /* white */
+    background: #0095A9FF; /* primary-600 */
+  }
+  /* Disabled */
+  .upload-btn:disabled {
+    opacity: 0.4; 
+  }
+  /* Hide the default file input */
+.button {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+  }
+  
+  /* Custom file input container */
+  .file-input-container {
+    position: relative;
+    width: fit-content;
+    margin: auto;
+  }
+  
+  /* Custom file input label */
+  .custom-file-label {
+   
+    position: absolute; 
+    top: 40px; 
+    left: -80px; 
+    width: 90px;
+    padding: 10px 20px;
+    background: #00BDD6FF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .custom-file-label:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Style the container to include an icon and file name display */
+  .file-input-container .file-name {
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+    font-size: 14px;
+  }
+  
+  .result{
+    position: absolute; 
+    top: 650px; 
+    left: 580px; 
+    width: 512px; 
+  }

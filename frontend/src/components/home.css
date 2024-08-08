@@ -1,13 +1,20 @@
 .home {
-    display: inline;
-  top: 192px; 
-  left: 100px; 
-  font-family: Epilogue; /* Heading */
-  font-size: 24px; 
-  line-height: 84px; 
-  font-weight: 700; 
-  color: #171A1FFF; /* neutral-900 */
-  }
-  .warning{
-    color: red;
-  }
+  display: inline;
+  top: 192px;
+  left: 100px;
+  font-family: Epilogue;
+  font-size: 24px;
+  line-height: 84px;
+  font-weight: 700;
+  color: #171a1fff;
+}
+.warning {
+  color: red;
+  position: absolute;
+  top: 330px;
+  left: 430px;
+  font-family: Epilogue;
+  font-size: 64px;
+  line-height: 84px;
+  font-weight: 700;
+}

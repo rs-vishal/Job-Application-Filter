@@ -1,7 +1,6 @@
-import React, {  useState,useContext, } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { FaUserAlt } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
 import { IoBriefcaseOutline } from "react-icons/io5";
 import { MdLogout } from "react-icons/md";
 import "./Nav.css";
@@ -11,38 +10,11 @@ import { TiThMenuOutline } from "react-icons/ti";
 import { MdVerified } from "react-icons/md";
 
 function Nav() {
-  const navigate = useNavigate();
-  const { user,setuser} = useContext(UserContext);
+  const { user, setUser, logout } = useContext(UserContext); // Use context here
   const [isOpen, setIsOpen] = useState(false);
-  const [isMenuopen, setIsmenuopen] = useState(false);
-  
+  const [isMenuopen, setIsMenuopen] = useState(false);
 
-  const logout = async () => {
-    try {
-      // Send logout request to the server
-      const response = await fetch('http://localhost:5000/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // Ensure cookies are sent with the request
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data.message);  
-        setuser(null); 
-        navigate('/'); 
-      } else {
-        console.log('Logout failed:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error during logout:', error);
-    }
-  };
-  
-
-  const admindropdown = () => setIsmenuopen(!isMenuopen);
+  const admindropdown = () => setIsMenuopen(!isMenuopen);
   const Dropdown = () => setIsOpen(!isOpen);
 
   return (
@@ -69,22 +41,23 @@ function Nav() {
         <Link to="/login" className="button-link">Log In</Link>
       </div>
       {user ? (
-  user.role === 'user' ? (
-    <div className="admin-menu" onClick={admindropdown}>
-      <TiThMenuOutline />
-      {isMenuopen && (
-        <div className="admin-dropdown-menu">
-          <p className="admin-dropdown-text"><Link to='/admin/listuser'>List User</Link></p>
-          <p className="admin-dropdown-text"><Link to='/admin/requirements'>Requirement</Link></p> 
-          <p className="admin-dropdown-text"><Link to='/admin/jobFilter'>Selected</Link></p>      
-        </div>
-      )}
-    </div>
-  ) : null 
-) : null} 
+        user.role === 'user' ? (
+          <div className="admin-menu" onClick={admindropdown}>
+            <TiThMenuOutline />
+            {isMenuopen && (
+              <div className="admin-dropdown-menu">
+                <p className="admin-dropdown-text"><Link to='/admin/listuser'>List User</Link></p>
+                <p className="admin-dropdown-text"><Link to='/admin/requirements'>Requirement</Link></p> 
+                <p className="admin-dropdown-text"><Link to='/admin/jobFilter'>Selected</Link></p>      
+              </div>
+            )}
+          </div>
+        ) : null 
+      ) : null} 
 
       <div className="logout" onClick={logout}>
-        <MdLogout />
+        <Link to='/'><MdLogout /></Link>
+        
       </div>
       <div className="user-profile" onMouseEnter={Dropdown} onMouseLeave={Dropdown}>
         <FaUserAlt />
@@ -97,7 +70,6 @@ function Nav() {
       </div>
       <div className="navbar-divider"></div>
     </div>
-    
   );
 }
 

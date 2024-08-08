@@ -1,50 +1,81 @@
 import React, { useState, useEffect } from 'react';
-import './listuser.css'
+import './listuser.css';
 
 const ListUser = () => {
     const [users, setUsers] = useState([]);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchUsers = async () => {
+        const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:5000/users', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    setUsers(data);
-                } else {
-                    setError(data.msg || 'Error fetching users');
+                const response = await fetch('http://localhost:5000/users');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
+                const usersData = await response.json();
+                setUsers(usersData);
             } catch (error) {
-                setError('Error fetching users');
+                setError(error.message);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchUsers();
+        fetchData();
     }, []);
+
+    useEffect(() => {
+        const fetchResults = async () => {
+            try {
+                // Create a map of user emails to fetch results in parallel
+                const results = await Promise.all(users.map(async (user) => {
+                    const response = await fetch(`http://localhost:5000/result/${user.email}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const result = await response.json();
+                    return { email: user.email, result: result.result };
+                }));
+
+                // Update users with fetched results
+                setUsers(prevUsers => prevUsers.map(user => {
+                    const result = results.find(r => r.email === user.email);
+                    return { ...user, result: result ? result.result : 'No result available' };
+                }));
+            } catch (error) {
+                console.error('Error fetching the results:', error);
+            }
+        };
+
+        if (users.length > 0) {
+            fetchResults();
+        }
+    }, [users]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     if (error) {
         return <div>Error: {error}</div>;
     }
 
     return (
-        <div className='listuser'>
-            <h2>User List</h2>
-            <ul>
-                {users.map(user => (
-                    <li key={user._id}>
-                        {user.username} - {user.email}
-                        
-                    </li>
+        <div className='list'>
+            <div className='listuser'>
+                {users.map((user) => (
+                    <div key={user.email} className='user-card'>
+                        <p className='show_username'>{user.username}</p>
+                        <p className='show_email'>{user.email}</p>
+                        <p className='show_role'>{user.role}</p>
+                        <p className='show_result'>
+                            {user.result ? user.result : 'Loading result...'}
+                        </p>
+                        <a href={`http://localhost:5000/admin/getFile/${user.email}`} target="_blank" rel="noopener noreferrer">View File</a>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 };

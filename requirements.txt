@@ -1,0 +1,7 @@
+Flask==2.3.4
+Werkzeug==2.3.3
+Flask-PyMongo==2.4.0
+Flask-CORS==3.1.2
+pymongo==4.6.0
+gridfs==2020.10.1
+bson==0.5.10

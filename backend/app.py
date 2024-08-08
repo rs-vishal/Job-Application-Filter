@@ -1,8 +1,9 @@
-from flask import Flask, request, jsonify, session, send_file
+import os
+import io
+from flask import Flask, request, jsonify, session, send_file, abort
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_pymongo import PyMongo
-import io
-import os
+import Text_extract as tex
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import gridfs
@@ -10,13 +11,13 @@ from bson import ObjectId
 
 app = Flask(__name__)
 
-# Load environment variables
 app.config["MONGO_URI"] = "mongodb://localhost:27017/Job_Application"
 app.config['SECRET_KEY'] = os.urandom(24)
-
 mongo = PyMongo(app)
 CORS(app, supports_credentials=True)
 fs = gridfs.GridFS(mongo.db)
+
+requirements = None
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -88,9 +89,15 @@ def set_requirements():
 @app.route('/admin/getrequirements', methods=['GET'])
 def get_requirements():
     try:
-        requirements = mongo.db.requirements.find({}, {"_id": 0, "requirement": 0})
-        requirements_list = list(requirements)
-        return jsonify(requirements_list), 200
+        last_document_cursor = mongo.db.requirements.find().sort('_id', -1).limit(1)
+        last_document = list(last_document_cursor)  
+        
+        if last_document:
+            global requirements
+            requirements = last_document[0].get('requirements', [])            
+            return jsonify({'requirements': requirements}), 200
+        else:
+            return jsonify({'message': 'No documents found'}), 404
     except Exception as e:
         return jsonify({"error": "An error occurred", "message": str(e)}), 500
 
@@ -116,8 +123,6 @@ def upload_resume():
     except Exception as e:
         print(e)
         return jsonify({'error': 'An error occurred while uploading the file'}), 500
-
-
 
 @app.route('/admin/getFiles', methods=['GET'])
 def get_files():
@@ -147,16 +152,40 @@ def get_users():
     except Exception as e:
         return jsonify({'message': 'Error fetching users', 'error': str(e)}), 500
 
-@app.route('/admin/getFile/<file_id>', methods=['GET'])
-def get_file(file_id):
+@app.route('/admin/getFile/<email>', methods=['GET'])
+def get_file(email):
     try:
-        print(f"Fetching file with ID: {file_id}")  # Debug print
-        file = fs.get(ObjectId(file_id))
-        return send_file(io.BytesIO(file.read()), mimetype=file.content_type, download_name=file.filename, as_attachment=False)
-    except Exception as e:
-        print(e)
-        return jsonify({"error": "An error occurred", "message": str(e)}), 500
+        print(f"Fetching file for email: {email}")
+        pipeline = [
+            {"$match": {"metadata.email": email}}
+        ]
+        file_metadata = list(mongo.db.fs.files.aggregate(pipeline))
 
+        if not file_metadata:
+            return jsonify({"error": "File not found"}), 404
+
+        file_id = file_metadata[0]['_id']
+        file_id = str(file_id)
+
+        def get_file_by_id(file_id):
+            try:
+                print(f"Fetching file with ID: {file_id}")
+                file = fs.get(ObjectId(file_id))
+                return send_file(
+                    io.BytesIO(file.read()),
+                    mimetype=file.content_type,
+                    download_name=file.filename,
+                    as_attachment=False
+                )
+            except Exception as e:
+                print(f"Error fetching file with ID {file_id}: {e}")
+                return jsonify({"error": "An error occurred", "message": str(e)}), 500
+
+        return get_file_by_id(file_id)
+    except Exception as e:
+        print(f"Error fetching file for email {email}: {e}")
+        return jsonify({"error": "An error occurred", "message": str(e)}), 500
+    
 @app.route('/logout', methods=['POST'])
 def logout():
     session.pop('user', None)
@@ -173,6 +202,46 @@ def get_session():
             'role': user.get('role', 'user')
         })
     return jsonify({'message': 'Not logged in', 'status': 'fail'}), 401
+
+@app.route('/result/<email>', methods=['GET'])
+def result(email):
+    try:
+        pipeline = [
+            {"$match": {"metadata.email": email}}
+        ]
+        file_metadata = list(mongo.db.fs.files.aggregate(pipeline))     
+
+        file_id = file_metadata[0]['_id']
+        print(f"Fetching file with ID: {file_id}")
+        
+        file = fs.get(ObjectId(file_id))
+        file_content = file.read()
+
+        if not file_content:
+            return jsonify({"error": "File content is empty"}), 400
+        last_document_cursor = mongo.db.requirements.find().sort('_id', -1).limit(1)
+        last_document = list(last_document_cursor)  
+        requirements = last_document[0].get('requirements', [])
+
+        if not requirements:
+            return jsonify({"error": "No requirements set"}), 400
+
+        temp_filename = secure_filename(file.filename)
+        temp_dir='/temp'
+        if not os.path.exists(temp_dir):
+            os.makedirs(temp_dir)
+        temp_filepath = os.path.join(temp_dir, temp_filename)
+        with open(temp_filepath, 'wb') as temp_file:
+            temp_file.write(file_content)
+
+        result = tex.start(temp_filepath, requirements)
+        os.remove(temp_filepath)  
+        print(result)
+        return jsonify({'result': result})
+
+    except Exception as e:
+        print(f"Error processing file for email {email}: {e}")
+        return jsonify({"error": "An error occurred", "message": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

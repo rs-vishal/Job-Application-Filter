@@ -2,24 +2,30 @@ import os
 import PyPDF2
 from docx import Document
 
-def extract_text_from_pdf(pdf_path):    #extract the text from pdf
-    with open(pdf_path, 'rb') as file:
-        reader = PyPDF2.PdfReader(file)  
-        number_of_pages = len(reader.pages) 
-        text = ""
-        for page_number in range(number_of_pages):
-            page = reader.pages[page_number]
-            text += page.extract_text()            
-    return text.lower()
 
-def extract_text_from_docx(docx_path):    #extract the text from pdf
-    doc = Document(docx_path)
+
+def extract_text_from_pdf(pdf_path):
     text = ""
-    for paragraph in doc.paragraphs:
-        text += paragraph.text + "\n"
+    try:
+        with open(pdf_path, 'rb') as file:
+            reader = PyPDF2.PdfReader(file)
+            for page in reader.pages:
+                text += page.extract_text() or ""
+    except Exception as e:
+        print(f"Error reading PDF file: {e}")
     return text.lower()
 
-def extract_text_from_file(file_path): #check the extension
+def extract_text_from_docx(docx_path):
+    text = ""
+    try:
+        doc = Document(docx_path)
+        for paragraph in doc.paragraphs:
+            text += paragraph.text + "\n"
+    except Exception as e:
+        print(f"Error reading DOCX file: {e}")
+    return text.lower()
+
+def extract_text_from_file(file_path):
     extension = os.path.splitext(file_path)[1].lower()
     if extension == '.pdf':
         return extract_text_from_pdf(file_path)
@@ -28,40 +34,34 @@ def extract_text_from_file(file_path): #check the extension
     else:
         raise ValueError("Unsupported file type. Only PDF and DOCX are supported.")
 
-def check_requirements(text, requirements):   #check for requirements
-    results = {}
-    for value in requirements:
-        results[value] = value in text
-    return results
-
-def convert_folder_to_text(folder_path):
+def convert_file_to_text(file):
     text_array = []
-    for filename in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, filename)
-        if os.path.isfile(file_path):
-            try:
-                text = extract_text_from_file(file_path)
-                text_array.append(text)
-            except ValueError as e:
-                print(f"Skipping {filename}: {e}")
+    if os.path.isfile(file):
+        try:
+            text = extract_text_from_file(file)
+            text_array.append(text)
+        except ValueError as e:
+            print(f"Skipping {file}: {e}")
+    else:
+        print(f"File not found: {file}")
     return text_array
-    # check_for_requirements(text_array,requirements)
-
 
 def check_for_requirements(text_array, requirements):
-    result = []
+    result = 0
     for text in text_array:
-        no_requirements_satisfied = 0
+        # no_requirements_satisfied = 0
         for requirement in requirements:
             if requirement in text:
-                no_requirements_satisfied += 1
-        result.append(no_requirements_satisfied)
+                result += 1
+        
     return result
 
+def start(file_path,requirements):
+    text_array = convert_file_to_text(file_path)
+    result = check_for_requirements(text_array, requirements)
+    print(len(requirements))
+    if(len(requirements))==result:
+        return 'Selected'
+    else:
+        return 'Not Selected'
     
-
-
-
-
-
- 
