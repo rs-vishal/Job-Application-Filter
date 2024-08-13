@@ -48,8 +48,7 @@ def convert_file_to_text(file):
 
 def check_for_requirements(text_array, requirements):
     result = 0
-    for text in text_array:
-        # no_requirements_satisfied = 0
+    for text in text_array:        
         for requirement in requirements:
             if requirement in text:
                 result += 1

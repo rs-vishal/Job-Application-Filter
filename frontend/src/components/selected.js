@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import './listuser.css';
-import { RiDeleteBin7Line } from "react-icons/ri";
 
-const ListUser = () => {
+import { RiDeleteBin7Line } from "react-icons/ri";
+import axios from 'axios';
+
+const Selected = () => {
     const [users, setUsers] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
@@ -55,24 +56,13 @@ const ListUser = () => {
 
     const delete_user = async (id) => {
         try {
-            const response = await fetch(`http://localhost:5000/admin/delete/${id}`, {
-                method: 'DELETE'
-            });
-    
-            const data = await response.json();
-    
-            if (response.ok) {
-                setMessage(data.message);
-                setUsers(prevUsers => prevUsers.filter(user => user._id !== id));
-            } else {
-                setMessage(data.error || 'Failed to delete user.');
-            }
+            const response = await axios.delete(`http://localhost:5000/delete/${id}`);
+            setMessage(response.data.message);
+            setUsers(users.filter(user => user.id !== id)); 
         } catch (error) {
             console.error('Error deleting user:', error);
-            setMessage('Failed to delete user.');
         }
     };
-    
 
     if (loading) {
         return <div>Loading...</div>;
@@ -85,21 +75,19 @@ const ListUser = () => {
     return (
         <div className='list'>
             <div className='listuser'>
-                {users.map((user) => (
+                {users.filter(user => user.result === 'Selected' ).map((user) => (
                     <div key={user.email} className='user-card'>
                         <p className='show_username'>{user.username}</p>
                         <p className='show_email'>{user.email}</p>
                         <p className='show_role'>{user.role}</p>
-                        <p className='show_result'>
-                            {user.result ? user.result : 'Loading result...'}
-                        </p>
+                        <p className='show_result'>{user.result}</p>
                         <a href={`http://localhost:5000/admin/getFile/${user.email}`} target="_blank" rel="noopener noreferrer">View File</a>
-                        <p className='delete_user' onClick={() => delete_user(user._id)} ><RiDeleteBin7Line /></p>
+                        <p className='delete_user' onClick={() => delete_user(user.id)}><RiDeleteBin7Line /></p>
                     </div>
                 ))}
-            </div>        
+            </div>
         </div>
     );
 };
 
-export default ListUser;
+export default Selected;

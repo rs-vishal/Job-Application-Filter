@@ -3,13 +3,13 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Listuser from "./components/Listuser";
-import Requirement from "./components/Requirement";
-import User_files from "./components/User_files";
+import Requirement from "./components/Requirement"; 
 import Nav from "./components/Nav";
 import Home from "./components/Home";
 import About from "./components/About";
 import Contact from "./components/Contact";
 import Upload from "./components/Upload";
+import Selected from "./components/selected";
 function App() {
   return (
     <>
@@ -24,7 +24,7 @@ function App() {
           <Route path="/admin/requirements" element={<Requirement />} />
           <Route path="/admin/listuser" element={<Listuser />} />
           <Route path="/admin/upload" element={<Upload />} />
-          
+          <Route path='/admin/selected' element={<Selected/>}/>
         </Routes>
       </Router>
     </>

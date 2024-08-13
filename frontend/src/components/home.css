@@ -8,13 +8,4 @@
   font-weight: 700;
   color: #171a1fff;
 }
-.warning {
-  color: red;
-  position: absolute;
-  top: 330px;
-  left: 430px;
-  font-family: Epilogue;
-  font-size: 64px;
-  line-height: 84px;
-  font-weight: 700;
-}
+

@@ -1,59 +1,72 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import './requirement.css'
+import React, { useState } from "react";
+import axios from "axios";
+import "./requirement.css";
+import { IoMdAddCircle } from "react-icons/io";
+import { BsUpload } from "react-icons/bs";
 
 function Requirement() {
-    const [RequirementData, setRequirementData] = useState([]);
-    const [inputValue, setInputValue] = useState('');
-    const [response, setResponse] = useState(null);
-    const [error, setError] = useState(null);
+  const [requirementData, setRequirementData] = useState([]);
+  const [inputValue, setInputValue] = useState("");
 
-    const handleInputChange = (e) => {
-        setInputValue(e.target.value);
-    };
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
 
-    const handleAddRequirements = () => {
-        if (inputValue.trim()) {
-            setRequirementData([...RequirementData, inputValue.trim()]);
-            setInputValue('');
-        }
-    };
+  const handleAddRequirements = () => {
+    if (inputValue.trim()) {
+      setRequirementData([...requirementData, inputValue.trim()]);
+      setInputValue("");
+    }
+  };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        try {
-            
-            const result = await axios.post('http://localhost:5000/admin/requirements', { requirements: RequirementData });
-            setResponse(result.data);
-            setRequirementData([]); 
-        } catch (error) {
-            console.error('There was an error!', error);
-            setError(error.response ? error.response.data : { error: 'Unknown error' });
-            setResponse(null);
-        }
-    };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await axios.post("http://localhost:5000/admin/requirements", {
+        requirements: requirementData,
+      });
+      setRequirementData([]);
+    } catch (error) {
+      console.error("There was an error!", error);
+    }
+  };
 
-    return (
-        <div className='requirement'>
-            <form onSubmit={handleSubmit}>
-                <input 
-                    type="text" 
-                    value={inputValue} 
-                    onChange={handleInputChange} 
-                    placeholder="Enter item" 
-                />
-                <button type="button" onClick={handleAddRequirements}>Add Requirement</button>
-                <button type="submit">Submit Array Data</button>
-            </form>
-            <ul>
-                {RequirementData.map((item, index) => (
-                    <li key={index}>{item}</li>
-                ))}
-            </ul>
-            {response && <div>Response: {JSON.stringify(response)}</div>}
-            {error && <div style={{ color: 'red' }}>Error: {JSON.stringify(error)}</div>}
+  return (
+    <div className="requirement">
+      <form onSubmit={handleSubmit}>
+        <div className="textbox">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            placeholder="Enter item"
+          />
+          <button
+            type="button"
+            onClick={handleAddRequirements}
+            aria-label="Add requirement"
+            className="add-button"
+          >
+            <IoMdAddCircle />
+          </button>
+          <button
+            type="submit"
+            aria-label="Submit requirements"
+            className="submit-button"
+          >
+            <BsUpload />
+          </button>
         </div>
-    );
+      </form>
+      <div className="requirements-list">
+        <ul>
+          {requirementData.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
 }
 
 export default Requirement;

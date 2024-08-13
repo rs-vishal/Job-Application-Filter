@@ -1,3 +1,44 @@
-.requirement{
-    margin: 20%;
-}
+.requirement {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensure the container takes full screen height */
+    flex-direction: column;
+  }
+  
+  .textbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .textbox input {
+    width: 608px;
+    height: 36px;
+    padding-left: 34px;
+    padding-right: 12px;
+    font-family: Inter;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 400;
+    background: #FFFFFF;
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: #BCC1CAFF;
+    border-style: solid;
+    outline: none;
+  }
+  
+  .add-button,
+  .submit-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    margin-left: 10px; /* Space between the input and icons */
+  }
+  
+  .add-button:hover,
+  .submit-button:hover {
+    color: #007bff;
+  }

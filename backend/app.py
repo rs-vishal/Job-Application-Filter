@@ -6,6 +6,7 @@ from flask_pymongo import PyMongo
 import Text_extract as tex
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
+from pymongo.errors import PyMongoError
 import gridfs
 from bson import ObjectId
 
@@ -124,22 +125,6 @@ def upload_resume():
         print(e)
         return jsonify({'error': 'An error occurred while uploading the file'}), 500
 
-@app.route('/admin/getFiles', methods=['GET'])
-def get_files():
-    try:
-        files = mongo.db.fs.files.find()
-        file_list = []
-        for file in files:
-            file_list.append({
-                "filename": file['filename'],
-                "file_id": str(file['_id'])
-            })
-        print(file_list)
-        return jsonify(file_list)
-    except Exception as e:
-        print(e)
-        return jsonify({"error": "An error occurred", "message": str(e)}), 500
-
 @app.route('/users', methods=['GET'])
 def get_users():
     try:
@@ -206,42 +191,58 @@ def get_session():
 @app.route('/result/<email>', methods=['GET'])
 def result(email):
     try:
-        pipeline = [
-            {"$match": {"metadata.email": email}}
-        ]
-        file_metadata = list(mongo.db.fs.files.aggregate(pipeline))     
+        pipeline = [{"$match": {"metadata.email": email}}]
+        file_metadata = list(mongo.db.fs.files.aggregate(pipeline))
+
+        if not file_metadata:
+            return jsonify({"error": "No file found for the given email"}), 404
 
         file_id = file_metadata[0]['_id']
-        print(f"Fetching file with ID: {file_id}")
-        
         file = fs.get(ObjectId(file_id))
         file_content = file.read()
 
         if not file_content:
             return jsonify({"error": "File content is empty"}), 400
+
         last_document_cursor = mongo.db.requirements.find().sort('_id', -1).limit(1)
-        last_document = list(last_document_cursor)  
+        last_document = list(last_document_cursor)
         requirements = last_document[0].get('requirements', [])
 
         if not requirements:
             return jsonify({"error": "No requirements set"}), 400
 
         temp_filename = secure_filename(file.filename)
-        temp_dir='/temp'
+        temp_dir = '/temp'
         if not os.path.exists(temp_dir):
             os.makedirs(temp_dir)
-        temp_filepath = os.path.join(temp_dir, temp_filename)
-        with open(temp_filepath, 'wb') as temp_file:
-            temp_file.write(file_content)
+        temp_filepath = os.path.join(temp_dir, temp_filename)        
+        try:
+            with open(temp_filepath, 'wb') as temp_file:
+                temp_file.write(file_content)
 
-        result = tex.start(temp_filepath, requirements)
-        os.remove(temp_filepath)  
-        print(result)
+            result = tex.start(temp_filepath, requirements)
+        finally:
+            if os.path.exists(temp_filepath):
+                os.remove(temp_filepath)
         return jsonify({'result': result})
+    except Exception as e:
+        return jsonify({"error": "An error occurred", "message": str(e)}), 500
+    
+from bson.objectid import ObjectId
+from flask import jsonify
+
+@app.route('/admin/delete/<id>', methods=['DELETE'])
+def delete(id):
+    try:
+        result = mongo.db.users.delete_one({"_id": ObjectId(id)})
+
+        if result.deleted_count == 0:
+            return jsonify({"error": "No document found with the provided ID"}), 404
+
+        return jsonify({"message": "User successfully deleted"}), 200
 
     except Exception as e:
-        print(f"Error processing file for email {email}: {e}")
         return jsonify({"error": "An error occurred", "message": str(e)}), 500
-
+ 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -41,14 +41,14 @@ function Nav() {
         <Link to="/login" className="button-link">Log In</Link>
       </div>
       {user ? (
-        user.role === 'user' ? (
+        user.role === 'admin' ? (
           <div className="admin-menu" onClick={admindropdown}>
             <TiThMenuOutline />
             {isMenuopen && (
               <div className="admin-dropdown-menu">
                 <p className="admin-dropdown-text"><Link to='/admin/listuser'>List User</Link></p>
                 <p className="admin-dropdown-text"><Link to='/admin/requirements'>Requirement</Link></p> 
-                <p className="admin-dropdown-text"><Link to='/admin/jobFilter'>Selected</Link></p>      
+                <p className="admin-dropdown-text"><Link to='/admin/selected'>Selected</Link></p>      
               </div>
             )}
           </div>

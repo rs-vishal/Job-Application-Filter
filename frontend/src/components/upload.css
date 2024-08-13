@@ -1,6 +1,6 @@
 .heading{
     position: absolute; 
-    top: 120px; 
+    top: 100px; 
     left: 645px; 
     font-family: Epilogue; 
     font-size: 40px; 
@@ -71,7 +71,7 @@
   .button:disabled {
     opacity: 0.4; 
   }
-  /* Textbox 1 */
+ 
 .textbox {
     position: absolute; 
     top: 113px; 
