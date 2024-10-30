@@ -8,7 +8,8 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from pymongo.errors import PyMongoError
 import gridfs
-from bson import ObjectId
+from bson.objectid import ObjectId
+
 
 app = Flask(__name__)
 
@@ -20,7 +21,7 @@ fs = gridfs.GridFS(mongo.db)
 
 requirements = None
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['POST'])   
 def register():
     data = request.get_json()
     username = data.get('username')
@@ -51,7 +52,6 @@ def login():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
-
     print("Logging in user:", email)
     try:
         user = mongo.db.users.find_one({"email": email})
@@ -106,16 +106,12 @@ def get_requirements():
 def upload_resume():
     if 'file' not in request.files:
         return jsonify({'error': 'No file part in the request'}), 400
-
     file = request.files['file']
     email = request.form.get('email')
-
     print("Received file:", file)
     print("Email:", email)
-
     if file.filename.strip() == '':
         return jsonify({'error': 'No selected file'}), 400
-
     try:
         filename = secure_filename(file.filename)
         metadata = {'email': email}
@@ -228,9 +224,6 @@ def result(email):
     except Exception as e:
         return jsonify({"error": "An error occurred", "message": str(e)}), 500
     
-from bson.objectid import ObjectId
-from flask import jsonify
-
 @app.route('/admin/delete/<id>', methods=['DELETE'])
 def delete(id):
     try:

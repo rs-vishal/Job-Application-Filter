@@ -26,8 +26,7 @@ export const UserProvider = ({ children }) => {
           };
           setUser(userData);
           localStorage.setItem('user', JSON.stringify(userData));
-        } else {
-          
+        } else {          
           setError(data.message);
         }
       } catch (error) {

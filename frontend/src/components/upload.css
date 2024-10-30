@@ -87,31 +87,30 @@
     font-size: 18px;
     font-weight: 400;
     line-height: 28px;
-    background: #FFFFFFFF; /* white */
+    background: #FFFFFFFF; 
     border-radius: 26px;
     border-width: 1px;
-    border-color: #9095A0FF; /* neutral-500 */
+    border-color: #9095A0FF; 
     outline: none;
   }
   .textbox input:hover {
-    color: #171A1FFF; /* neutral-900 */
-    background: #FFFFFFFF; /* white */
-    border-color: #A7ADB7FF; /* neutral-450 */
+    color: #171A1FFF; 
+    background: #FFFFFFFF;
+    border-color: #A7ADB7FF; 
   }
   .textbox input:focused {
-    color: #171A1FFF; /* neutral-900 */
-    background: #FFFFFFFF; /* white */
-    border-color: #9095A0FF; /* neutral-500 */
+    color: #171A1FFF;
+    background: #FFFFFFFF;
+    border-color: #9095A0FF; 
   }
   .textbox input:disabled {
-    color: #171A1FFF; /* neutral-900 */
-    background: #FFFFFFFF; /* white */
-    border-color: #BCC1CAFF; /* neutral-400 */
+    color: #171A1FFF; 
+    background: #FFFFFFFF;
+    border-color: #BCC1CAFF;
   }
   .textbox :disabled + .icon, .textbox :disabled + .icon + .icon {
-    fill: #171A1FFF; /* neutral-900 */
+    fill: #171A1FFF; 
   }
-  /* Button 2 */
 .upload-btn {
     position: absolute; 
     top: 370px; 
@@ -126,41 +125,35 @@
     font-size: 14px; 
     line-height: 22px; 
     font-weight: 400; 
-    color: #FFFFFFFF; /* white */
-    background: #00BDD6FF; /* primary-500 */
+    color: #FFFFFFFF; 
+    background: #00BDD6FF; 
     opacity: 1; 
     border: none; 
-    border-radius: 4px; /* border-m */
+    border-radius: 4px;
   }
-  /* Hover */
   .upload-btn:hover {
-    color: #FFFFFFFF; /* white */
-    background: #00A9C0FF; /* primary-550 */
+    color: #FFFFFFFF; 
+    background: #00A9C0FF; 
   }
-  /* Pressed */
   .upload-btn:hover:active {
-    color: #FFFFFFFF; /* white */
-    background: #0095A9FF; /* primary-600 */
+    color: #FFFFFFFF; 
+    background: #0095A9FF; 
   }
-  /* Disabled */
   .upload-btn:disabled {
     opacity: 0.4; 
   }
-  /* Hide the default file input */
 .button {
     opacity: 0;
     position: absolute;
     z-index: -1;
   }
   
-  /* Custom file input container */
   .file-input-container {
     position: relative;
     width: fit-content;
     margin: auto;
   }
   
-  /* Custom file input label */
   .custom-file-label {
    
     position: absolute; 
@@ -179,7 +172,6 @@
     background-color: #0056b3;
   }
   
-  /* Style the container to include an icon and file name display */
   .file-input-container .file-name {
     display: inline-block;
     margin-left: 10px;
@@ -188,8 +180,21 @@
   }
   
   .result{
-    position: absolute; 
-    top: 650px; 
-    left: 580px; 
-    width: 512px; 
+    text-align: center;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    width: 280px;
+    margin: 190px;
+    margin-left:36%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
+  
+ .hresult{   
+  color: #08838c;
+  margin-bottom: 20px;
+  }
+.presult{
+  color: #08838c;
+    font-size: 18px;
+}
